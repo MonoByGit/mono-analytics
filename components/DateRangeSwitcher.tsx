@@ -8,22 +8,22 @@ interface DateRangeSwitcherProps {
 }
 
 const modes: { value: Mode; label: string }[] = [
-  { value: 'day', label: 'Day' },
-  { value: 'week', label: 'Week' },
-  { value: 'month', label: 'Month' },
+  { value: 'day', label: 'day' },
+  { value: 'week', label: '7d' },
+  { value: 'month', label: '30d' },
 ];
 
 export function DateRangeSwitcher({ mode, onChange }: DateRangeSwitcherProps) {
   return (
-    <div className="flex gap-1 bg-surface border border-border rounded-xl p-1">
+    <div className="flex gap-px bg-border rounded overflow-hidden">
       {modes.map(m => (
         <button
           key={m.value}
           onClick={() => onChange(m.value)}
-          className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+          className={`px-3 py-1.5 text-xs font-mono transition-colors duration-150 ${
             mode === m.value
-              ? 'bg-accent-blue text-white'
-              : 'text-text-secondary hover:text-white'
+              ? 'bg-accent-amber text-[#0a0a0a] font-bold'
+              : 'bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-raised'
           }`}
         >
           {m.label}

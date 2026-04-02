@@ -6,92 +6,77 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { DateRangeSwitcher } from '@/components/DateRangeSwitcher';
 import { KPICard } from '@/components/ui/KPICard';
-
-// Load chart components client-only — Recharts uses browser APIs that break SSR
-const FunnelChart = dynamic(() => import('@/components/FunnelChart').then(m => m.FunnelChart), { ssr: false });
-const TrendChart = dynamic(() => import('@/components/TrendChart').then(m => m.TrendChart), { ssr: false });
 import { SkeletonCard, SkeletonChart } from '@/components/ui/SkeletonCard';
 import { ErrorCard } from '@/components/ui/ErrorCard';
-import { formatPercent } from '@/lib/dateRange';
+
+const FunnelChart = dynamic(() => import('@/components/FunnelChart').then(m => m.FunnelChart), { ssr: false });
+const TrendChart = dynamic(() => import('@/components/TrendChart').then(m => m.TrendChart), { ssr: false });
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
-
 type Mode = 'day' | 'week' | 'month';
 
 export default function CampaignDetailPage({ params }: { params: { id: string } }) {
   const [mode, setMode] = useState<Mode>('week');
-  const { data, error, mutate } = useSWR(
-    `/api/campaigns/${params.id}/detail?mode=${mode}`,
-    fetcher
-  );
+  const { data, error, mutate } = useSWR(`/api/campaigns/${params.id}/detail?mode=${mode}`, fetcher);
 
   const campaign = data?.campaign;
   const analytics = data?.analytics;
   const daily = data?.daily ?? [];
 
   return (
-    <div className="p-5 md:p-8 max-w-5xl mx-auto">
-      <div className="flex items-center gap-3 mb-8">
-        <Link href="/campaigns" className="text-text-secondary hover:text-white transition-colors text-sm">
-          ← Campaigns
-        </Link>
-        <span className="text-text-tertiary">/</span>
-        <h1 className="text-white font-bold text-xl tracking-tight truncate">
+    <div className="p-5 md:p-7 max-w-5xl mx-auto">
+      <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
+        <Link href="/campaigns" className="text-text-secondary hover:text-text-primary font-mono text-xs transition-colors">← campaigns</Link>
+        <span className="text-text-tertiary font-mono text-xs">/</span>
+        <h1 className="text-text-primary font-mono font-bold text-sm truncate flex-1">
           {campaign?.name ?? '...'}
         </h1>
         {campaign && (
-          <span className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${
+          <span className={`text-[10px] font-mono px-1.5 py-0.5 border shrink-0 ${
             campaign.status === 'active'
-              ? 'bg-accent-green/15 text-accent-green'
-              : 'bg-[#1f1f1f] text-text-secondary'
+              ? 'border-accent-green/30 text-accent-green'
+              : 'border-border text-text-secondary'
           }`}>
             {campaign.status}
           </span>
         )}
-        <div className="ml-auto shrink-0">
-          <DateRangeSwitcher mode={mode} onChange={setMode} />
-        </div>
+        <DateRangeSwitcher mode={mode} onChange={setMode} />
       </div>
 
       {error ? (
-        <ErrorCard message="Failed to load campaign details" onRetry={() => mutate()} />
+        <ErrorCard message="failed to load campaign" onRetry={() => mutate()} />
       ) : !data ? (
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
             {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
           </div>
-          <SkeletonChart className="h-48" />
-          <SkeletonChart className="h-48" />
+          <SkeletonChart className="h-40" />
+          <SkeletonChart className="h-40" />
         </div>
       ) : (
-        <div className="space-y-6">
-          {/* KPIs */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <KPICard label="Total Leads" value={analytics?.total_leads ?? 0} />
-            <KPICard label="Emails Sent" value={analytics?.emails_sent_count ?? 0} />
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <KPICard label="total leads" value={analytics?.total_leads ?? 0} />
+            <KPICard label="emails sent" value={analytics?.emails_sent_count ?? 0} />
             <KPICard
-              label="Bounce Rate"
-              value={analytics && analytics.emails_sent_count
-                ? (analytics.bounced_count / analytics.emails_sent_count) * 100 : 0}
-              isPercent
-              color="red"
+              label="bounce rate"
+              value={analytics?.emails_sent_count ? (analytics.bounced_count / analytics.emails_sent_count) * 100 : 0}
+              isPercent color="red"
             />
-            <KPICard label="Opportunities" value={analytics?.opportunities_count ?? 0} color="blue" />
+            <KPICard label="opportunities" value={analytics?.opportunities_count ?? 0} color="amber" />
           </div>
 
-          {/* Funnel */}
           {analytics && (
-            <div className="bg-surface border border-border rounded-2xl p-6">
-              <h2 className="text-white font-semibold mb-5">Conversion Funnel</h2>
+            <div className="bg-surface border border-border rounded p-5">
+              <p className="text-text-primary text-xs font-mono font-bold uppercase tracking-widest mb-5">conversion funnel</p>
               <FunnelChart analytics={analytics} />
             </div>
           )}
 
-          {/* Daily Trend */}
-          <div className="bg-surface border border-border rounded-2xl p-6">
-            <h2 className="text-white font-semibold mb-5">Daily Trend</h2>
+          <div className="bg-surface border border-border rounded p-5">
+            <p className="text-text-primary text-xs font-mono font-bold uppercase tracking-widest mb-4">daily trend</p>
             {daily.length === 0 ? (
-              <p className="text-text-secondary text-sm">No daily data available for this period.</p>
+              <p className="text-text-secondary text-xs font-mono">no daily data for this period</p>
             ) : (
               <TrendChart data={daily} />
             )}

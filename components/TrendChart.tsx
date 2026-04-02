@@ -1,53 +1,35 @@
 'use client';
 
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { DailyAnalytics } from '@/lib/types';
 import { formatDate } from '@/lib/dateRange';
-
-interface TrendChartProps {
-  data: DailyAnalytics[];
-}
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#1a1a1a] border border-border rounded-xl p-3 text-sm">
-      <p className="text-text-secondary mb-2">{label}</p>
-      {payload.map((entry: any) => (
-        <p key={entry.name} style={{ color: entry.color }} className="tabular-nums">
-          {entry.name}: <strong>{entry.value}</strong>
-        </p>
+    <div className="bg-surface border border-border rounded p-2.5 text-xs font-mono">
+      <p className="text-text-secondary mb-1.5">{label}</p>
+      {payload.map((e: any) => (
+        <p key={e.name} style={{ color: e.color }}>{e.name}: <strong>{e.value}</strong></p>
       ))}
     </div>
   );
 };
 
-export function TrendChart({ data }: TrendChartProps) {
-  const formatted = data.map(d => ({
-    ...d,
-    date: formatDate(d.date),
-  }));
+export function TrendChart({ data }: { data: DailyAnalytics[] }) {
+  const formatted = data.map(d => ({ ...d, date: formatDate(d.date ?? '') }));
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <LineChart data={formatted} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#1a1a1a" />
-        <XAxis dataKey="date" tick={{ fill: '#8E8E93', fontSize: 11 }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fill: '#8E8E93', fontSize: 11 }} axisLine={false} tickLine={false} width={35} />
+    <ResponsiveContainer width="100%" height={200}>
+      <LineChart data={formatted} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
+        <CartesianGrid strokeDasharray="2 4" stroke="#1c1c1c" />
+        <XAxis dataKey="date" tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
+        <YAxis tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} width={28} />
         <Tooltip content={<CustomTooltip />} />
-        <Legend wrapperStyle={{ color: '#8E8E93', fontSize: 12, paddingTop: 12 }} />
-        <Line type="monotone" dataKey="sent" name="Sent" stroke="#8E8E93" strokeWidth={1.5} dot={false} />
-        <Line type="monotone" dataKey="opened" name="Opened" stroke="#0A84FF" strokeWidth={2} dot={false} style={{ filter: 'drop-shadow(0 0 4px #0A84FF60)' }} />
-        <Line type="monotone" dataKey="replied" name="Replied" stroke="#30D158" strokeWidth={2} dot={false} style={{ filter: 'drop-shadow(0 0 4px #30D15860)' }} />
+        <Legend wrapperStyle={{ color: '#666', fontSize: 10, fontFamily: 'monospace', paddingTop: 8 }} />
+        <Line type="monotone" dataKey="sent" name="sent" stroke="#444" strokeWidth={1} dot={false} />
+        <Line type="monotone" dataKey="opened" name="opened" stroke="#E8773A" strokeWidth={1.5} dot={false} />
+        <Line type="monotone" dataKey="replied" name="replied" stroke="#4A9B6F" strokeWidth={1.5} dot={false} />
       </LineChart>
     </ResponsiveContainer>
   );

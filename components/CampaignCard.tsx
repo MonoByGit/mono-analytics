@@ -1,57 +1,58 @@
 'use client';
 
-import { formatNumber, formatPercent } from '@/lib/dateRange';
-import { InstantlyCampaign, CampaignAnalytics } from '@/lib/types';
-import { SparklineChart } from './SparklineChart';
-import clsx from 'clsx';
 import Link from 'next/link';
+import clsx from 'clsx';
+import { InstantlyCampaign, CampaignAnalytics } from '@/lib/types';
 
 interface CampaignCardProps {
   campaign: InstantlyCampaign;
   analytics: CampaignAnalytics | null;
-  sparklineData?: { value: number }[];
 }
 
-export function CampaignCard({ campaign, analytics, sparklineData = [] }: CampaignCardProps) {
+function fmt(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return n.toString();
+}
+
+function pct(num: number, den: number): string {
+  if (!den) return '—';
+  return `${((num / den) * 100).toFixed(1)}%`;
+}
+
+export function CampaignCard({ campaign, analytics }: CampaignCardProps) {
   const sent = analytics?.emails_sent_count ?? 0;
   const opened = analytics?.open_count ?? 0;
   const replied = analytics?.reply_count ?? 0;
+  const opps = analytics?.opportunities_count ?? 0;
 
   return (
     <Link href={`/campaigns/${campaign.id}`}>
-      <div className="bg-surface border border-border rounded-2xl p-5 transition-all duration-200 hover:border-[#2f2f2f] hover:bg-[#161616] cursor-pointer">
+      <div className="bg-surface border border-border rounded p-4 hover:border-[#333] transition-colors duration-150 cursor-pointer group">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex-1 min-w-0">
-            <p className="text-white font-semibold text-sm truncate">{campaign.name}</p>
-          </div>
+          <p className="text-text-primary text-sm font-mono font-medium leading-tight pr-2 group-hover:text-accent-amber transition-colors">{campaign.name}</p>
           <span className={clsx(
-            'text-xs px-2 py-0.5 rounded-full ml-2 shrink-0',
+            'text-[10px] font-mono px-1.5 py-0.5 border shrink-0',
             campaign.status === 'active'
-              ? 'bg-accent-green/15 text-accent-green'
-              : 'bg-[#1f1f1f] text-text-secondary'
+              ? 'border-accent-green/30 text-accent-green bg-accent-green/5'
+              : 'border-border text-text-secondary'
           )}>
             {campaign.status}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-3 mb-4">
-          <div>
-            <p className="text-text-tertiary text-xs mb-1">Sent</p>
-            <p className="text-white text-base font-bold tabular-nums">{formatNumber(sent)}</p>
-          </div>
-          <div>
-            <p className="text-text-tertiary text-xs mb-1">Open Rate</p>
-            <p className="text-accent-blue text-base font-bold tabular-nums">{formatPercent(opened, sent)}</p>
-          </div>
-          <div>
-            <p className="text-text-tertiary text-xs mb-1">Reply Rate</p>
-            <p className="text-accent-green text-base font-bold tabular-nums">{formatPercent(replied, sent)}</p>
-          </div>
+        <div className="grid grid-cols-4 gap-0 border border-border rounded overflow-hidden">
+          {[
+            { label: 'sent', value: fmt(sent) },
+            { label: 'open', value: pct(opened, sent), color: 'text-accent-amber' },
+            { label: 'reply', value: pct(replied, sent), color: 'text-accent-green' },
+            { label: 'opps', value: fmt(opps), color: 'text-accent-blue' },
+          ].map((stat, i) => (
+            <div key={stat.label} className={`p-2.5 ${i < 3 ? 'border-r border-border' : ''}`}>
+              <p className="text-text-tertiary text-[9px] font-mono uppercase tracking-widest mb-1">{stat.label}</p>
+              <p className={`text-sm font-mono font-bold tabular-nums ${stat.color ?? 'text-text-primary'}`}>{stat.value}</p>
+            </div>
+          ))}
         </div>
-
-        {sparklineData.length > 0 && (
-          <SparklineChart data={sparklineData} />
-        )}
       </div>
     </Link>
   );
