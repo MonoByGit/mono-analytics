@@ -3,13 +3,13 @@ import './globals.css';
 import { SideNav, BottomNav } from '@/components/Navigation';
 
 export const metadata: Metadata = {
-  title: 'Mono Dashboard',
+  title: 'Mono Analytics',
   description: 'Personal analytics dashboard for email outreach and web traffic',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Mono',
+    title: 'Mono Analytics',
   },
 };
 
@@ -24,7 +24,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180.png" />
+        <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/logo.svg" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
