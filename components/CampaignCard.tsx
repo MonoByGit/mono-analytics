@@ -16,7 +16,8 @@ function fmt(n: number): string {
 
 function pct(num: number, den: number): string {
   if (!den) return '—';
-  return `${((num / den) * 100).toFixed(1)}%`;
+  // Cap at 100% — Instantly counts total opens which can exceed sent count
+  return `${Math.min(100, (num / den) * 100).toFixed(1)}%`;
 }
 
 export function CampaignCard({ campaign, analytics }: CampaignCardProps) {
@@ -26,10 +27,10 @@ export function CampaignCard({ campaign, analytics }: CampaignCardProps) {
   const opps = analytics?.opportunities_count ?? 0;
 
   return (
-    <Link href={`/campaigns/${campaign.id}`}>
-      <div className="bg-surface border border-border rounded p-4 hover:border-[#333] transition-colors duration-150 cursor-pointer group">
-        <div className="flex items-start justify-between mb-4">
-          <p className="text-text-primary text-sm font-mono font-medium leading-tight pr-2 group-hover:text-accent-amber transition-colors">{campaign.name}</p>
+    <Link href={`/campaigns/${campaign.id}`} className="block h-full">
+      <div className="bg-surface border border-border rounded p-4 hover:border-[#333] transition-colors duration-150 cursor-pointer group h-full flex flex-col">
+        <div className="flex items-start justify-between mb-4 flex-1">
+          <p className="text-text-primary text-sm font-mono font-medium leading-tight pr-2 group-hover:text-accent-amber transition-colors line-clamp-2">{campaign.name}</p>
           <span className={clsx(
             'text-[10px] font-mono px-1.5 py-0.5 border shrink-0',
             campaign.status === 'active'
@@ -40,7 +41,7 @@ export function CampaignCard({ campaign, analytics }: CampaignCardProps) {
           </span>
         </div>
 
-        <div className="grid grid-cols-4 gap-0 border border-border rounded overflow-hidden">
+        <div className="grid grid-cols-4 gap-0 border border-border rounded overflow-hidden mt-auto">
           {[
             { label: 'sent', value: fmt(sent) },
             { label: 'open', value: pct(opened, sent), color: 'text-accent-amber' },

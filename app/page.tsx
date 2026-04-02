@@ -26,7 +26,8 @@ export default function HomePage() {
   const ins = overview?.instantly;
   const uma = overview?.umami;
 
-  const openRate = ins?.emails_sent_count ? (ins.open_count / ins.emails_sent_count) * 100 : 0;
+  // Cap at 100% — Instantly counts total open events, not unique openers
+  const openRate = ins?.emails_sent_count ? Math.min(100, (ins.open_count / ins.emails_sent_count) * 100) : 0;
   const replyRate = ins?.emails_sent_count ? (ins.reply_count / ins.emails_sent_count) * 100 : 0;
 
   return (
