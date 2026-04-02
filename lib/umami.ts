@@ -12,10 +12,15 @@ function getHeaders() {
 
 export async function getWebsiteStats(startAt: number, endAt: number): Promise<UmamiStats> {
   const websiteId = process.env.UMAMI_WEBSITE_ID;
-  const url = `${BASE_URL}/websites/${websiteId}/stats?startAt=${startAt}&endAt=${endAt}`;
+  const params = new URLSearchParams({
+    startAt: String(startAt),
+    endAt: String(endAt),
+    timezone: 'Europe/Amsterdam',
+  });
+  const url = `${BASE_URL}/websites/${websiteId}/stats?${params}`;
   const res = await fetch(url, {
     headers: getHeaders(),
-    next: { revalidate: 300 },
+    cache: 'no-store', // always fresh — no stale 0s from cache
   });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
@@ -26,10 +31,16 @@ export async function getWebsiteStats(startAt: number, endAt: number): Promise<U
 
 export async function getPageviews(startAt: number, endAt: number, unit = 'day'): Promise<UmamiPageviews> {
   const websiteId = process.env.UMAMI_WEBSITE_ID;
-  const url = `${BASE_URL}/websites/${websiteId}/pageviews?startAt=${startAt}&endAt=${endAt}&unit=${unit}`;
+  const params = new URLSearchParams({
+    startAt: String(startAt),
+    endAt: String(endAt),
+    unit,
+    timezone: 'Europe/Amsterdam',
+  });
+  const url = `${BASE_URL}/websites/${websiteId}/pageviews?${params}`;
   const res = await fetch(url, {
     headers: getHeaders(),
-    next: { revalidate: 300 },
+    cache: 'no-store',
   });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
