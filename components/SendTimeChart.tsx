@@ -29,7 +29,7 @@ export function SendTimeChart({ data }: { data: SendTimeData[] }) {
       <BarChart data={data} margin={{ top: 5, right: 10, bottom: 5, left: 0 }}>
         <CartesianGrid strokeDasharray="2 4" stroke="#1c1c1c" vertical={false} />
         <XAxis dataKey="day" tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} />
-        <YAxis tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} width={28} unit="%" domain={[0, Math.ceil(maxRate * 1.2)]} />
+        <YAxis tick={{ fill: '#666', fontSize: 10, fontFamily: 'monospace' }} axisLine={false} tickLine={false} width={38} tickFormatter={(v) => `${v}%`} domain={[0, Math.ceil(maxRate * 1.2)]} />
         <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="openRate" name="open rate" radius={[2, 2, 0, 0]}>
           {data.map((entry, index) => (
