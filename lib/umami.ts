@@ -26,7 +26,15 @@ export async function getWebsiteStats(startAt: number, endAt: number): Promise<U
     const body = await res.text().catch(() => '');
     throw new Error(`Umami stats error: ${res.status} — ${body}`);
   }
-  return res.json();
+  const raw = await res.json();
+  // Umami Cloud v1 returns flat numbers + comparison object — transform to {value, change}
+  return {
+    pageviews: { value: raw.pageviews ?? 0, change: raw.comparison?.pageviews ?? 0 },
+    visitors: { value: raw.visitors ?? 0, change: raw.comparison?.visitors ?? 0 },
+    visits: { value: raw.visits ?? 0, change: raw.comparison?.visits ?? 0 },
+    bounces: { value: raw.bounces ?? 0, change: raw.comparison?.bounces ?? 0 },
+    totaltime: { value: raw.totaltime ?? 0, change: raw.comparison?.totaltime ?? 0 },
+  };
 }
 
 export async function getPageviews(startAt: number, endAt: number, unit = 'day'): Promise<UmamiPageviews> {

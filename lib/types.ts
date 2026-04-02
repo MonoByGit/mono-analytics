@@ -40,11 +40,11 @@ export interface DailyAnalytics {
 
 // Umami types
 export interface UmamiStats {
-  pageviews: { value: number; prev: number };
-  visitors: { value: number; prev: number };
-  sessions: { value: number; prev: number };
-  bounces: { value: number; prev: number };
-  totaltime: { value: number; prev: number };
+  pageviews: { value: number; change: number };
+  visitors: { value: number; change: number };
+  visits: { value: number; change: number };
+  bounces: { value: number; change: number };
+  totaltime: { value: number; change: number };
 }
 
 export interface UmamiPageviewData {
