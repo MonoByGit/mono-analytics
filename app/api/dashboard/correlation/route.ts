@@ -25,12 +25,16 @@ export async function GET(req: NextRequest) {
     dateMap[d.date] = { date: d.date, opens: d.opens, pageviews: 0 };
   });
 
-  umamiDaily.forEach(d => {
-    const date = d.date.split('T')[0];
+  umamiDaily.forEach((d: any) => {
+    // Umami Cloud returns {x: "2024-04-02 00:00:00", y: 5}
+    const rawDate: string = d.x ?? d.date ?? '';
+    const date = rawDate.split(/[T ]/)[0];
+    const value: number = d.y ?? d.value ?? 0;
+    if (!date) return;
     if (dateMap[date]) {
-      dateMap[date].pageviews = d.value;
+      dateMap[date].pageviews = value;
     } else {
-      dateMap[date] = { date, opens: 0, pageviews: d.value };
+      dateMap[date] = { date, opens: 0, pageviews: value };
     }
   });
 

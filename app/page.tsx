@@ -1,14 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import useSWR from 'swr';
 import { DateRangeSwitcher } from '@/components/DateRangeSwitcher';
 import { KPICard } from '@/components/ui/KPICard';
 import { SkeletonCard, SkeletonChart } from '@/components/ui/SkeletonCard';
 import { ErrorCard } from '@/components/ui/ErrorCard';
-import { CorrelationChart } from '@/components/CorrelationChart';
 import { CampaignCard } from '@/components/CampaignCard';
 import { formatPercent } from '@/lib/dateRange';
+
+const CorrelationChart = dynamic(() => import('@/components/CorrelationChart').then(m => m.CorrelationChart), { ssr: false });
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 

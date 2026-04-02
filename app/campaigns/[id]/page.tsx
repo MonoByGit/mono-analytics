@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import useSWR from 'swr';
 import Link from 'next/link';
 import { DateRangeSwitcher } from '@/components/DateRangeSwitcher';
-import { FunnelChart } from '@/components/FunnelChart';
-import { TrendChart } from '@/components/TrendChart';
 import { KPICard } from '@/components/ui/KPICard';
+
+// Load chart components client-only — Recharts uses browser APIs that break SSR
+const FunnelChart = dynamic(() => import('@/components/FunnelChart').then(m => m.FunnelChart), { ssr: false });
+const TrendChart = dynamic(() => import('@/components/TrendChart').then(m => m.TrendChart), { ssr: false });
 import { SkeletonCard, SkeletonChart } from '@/components/ui/SkeletonCard';
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import { formatPercent } from '@/lib/dateRange';
