@@ -24,7 +24,7 @@ export function CampaignCard({ campaign, analytics }: CampaignCardProps) {
   const sent = analytics?.emails_sent_count ?? 0;
   const opened = analytics?.open_count ?? 0;
   const replied = analytics?.reply_count ?? 0;
-  const opps = analytics?.opportunities_count ?? 0;
+  const opps = analytics?.total_opportunities ?? 0;
 
   return (
     <Link href={`/campaigns/${campaign.id}`} className="block h-full">

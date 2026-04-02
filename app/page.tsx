@@ -52,7 +52,7 @@ export default function HomePage() {
             <KPICard label="sent" value={ins?.emails_sent_count ?? 0} />
             <KPICard label="open rate" value={openRate} isPercent color="amber" delta={uma?.pageviews?.change ?? null} />
             <KPICard label="reply rate" value={replyRate} isPercent color="green" />
-            <KPICard label="opportunities" value={ins?.opportunities_count ?? 0} color="blue" />
+            <KPICard label="opportunities" value={ins?.total_opportunities ?? ins?.opportunities_count ?? 0} color="blue" />
             <KPICard label="pageviews" value={uma?.pageviews?.value ?? 0} delta={uma?.pageviews?.change ?? null} />
             <KPICard label="visitors" value={uma?.visitors?.value ?? 0} delta={uma?.visitors?.change ?? null} />
           </>

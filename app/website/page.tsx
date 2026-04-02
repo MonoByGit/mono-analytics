@@ -18,10 +18,9 @@ const WebsitePageviewChart = dynamic(
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 type Mode = 'day' | 'week' | 'month';
 
-function formatDuration(ms: number): string {
-  const s = Math.round(ms / 1000);
-  if (s < 60) return `${s}s`;
-  return `${Math.floor(s / 60)}m ${s % 60}s`;
+function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${seconds}s`;
+  return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
 }
 
 export default function WebsitePage() {

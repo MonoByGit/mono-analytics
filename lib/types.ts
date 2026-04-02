@@ -9,14 +9,14 @@ export interface InstantlyCampaign {
 export interface CampaignAnalytics {
   campaign_id: string;
   campaign_name: string;
-  total_leads: number;
+  leads_count: number;
   contacted_count: number;
   emails_sent_count: number;
   open_count: number;
   reply_count: number;
   bounced_count: number;
   unsubscribed_count: number;
-  opportunities_count: number;
+  total_opportunities: number;
   new_leads_contacted_count: number;
 }
 

@@ -6,7 +6,7 @@ export function FunnelChart({ analytics }: { analytics: CampaignAnalytics }) {
   const contacted = analytics.contacted_count ?? 0;
   const opened = analytics.open_count ?? 0;
   const replied = analytics.reply_count ?? 0;
-  const interested = analytics.opportunities_count ?? 0;
+  const interested = analytics.total_opportunities ?? 0;
 
   // Instantly tracks total open events, not unique openers — opens can exceed contacts.
   // For the funnel bar we cap visually at contacted, but show the real number.

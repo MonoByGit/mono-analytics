@@ -56,14 +56,14 @@ export default function CampaignDetailPage({ params }: { params: { id: string } 
       ) : (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <KPICard label="total leads" value={analytics?.total_leads ?? 0} />
+            <KPICard label="total leads" value={analytics?.leads_count ?? 0} />
             <KPICard label="emails sent" value={analytics?.emails_sent_count ?? 0} />
             <KPICard
               label="bounce rate"
               value={analytics?.emails_sent_count ? (analytics.bounced_count / analytics.emails_sent_count) * 100 : 0}
               isPercent color="red"
             />
-            <KPICard label="opportunities" value={analytics?.opportunities_count ?? 0} color="amber" />
+            <KPICard label="opportunities" value={analytics?.total_opportunities ?? 0} color="amber" />
           </div>
 
           {analytics && (
