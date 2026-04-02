@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
@@ -17,7 +17,8 @@ export function SideNav() {
   return (
     <nav className="hidden md:flex flex-col w-56 shrink-0 bg-surface border-r border-border min-h-screen p-6">
       <div className="mb-10 flex items-center gap-2.5">
-        <Image src="/logo.svg" alt="Mono Analytics" width={28} height={28} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.svg" alt="" width={28} height={28} />
         <span className="text-white font-bold text-lg tracking-tight">Mono Analytics</span>
       </div>
       <div className="space-y-1">
