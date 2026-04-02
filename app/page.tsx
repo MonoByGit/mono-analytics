@@ -16,7 +16,7 @@ const fetcher = (url: string) => fetch(url).then(r => r.json());
 type Mode = 'day' | 'week' | 'month';
 
 export default function HomePage() {
-  const [mode, setMode] = useState<Mode>('week');
+  const [mode, setMode] = useState<Mode>('day');
 
   const { data: overview, error: overviewError, mutate: retryOverview } = useSWR(`/api/dashboard/overview?mode=${mode}`, fetcher);
   const { data: correlation, error: corrError, mutate: retryCorr } = useSWR(`/api/dashboard/correlation?mode=${mode}`, fetcher);

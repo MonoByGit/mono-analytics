@@ -12,7 +12,10 @@ export default function CampaignsPage() {
   const [filter, setFilter] = useState<'all' | 'active' | 'paused'>('all');
   const { data, error, mutate } = useSWR('/api/campaigns', fetcher);
 
-  const all = data?.campaigns ?? [];
+  const STATUS_ORDER: Record<string, number> = { active: 0, paused: 1, draft: 2, completed: 3, stopped: 4 };
+  const all = (data?.campaigns ?? []).slice().sort((a: any, b: any) =>
+    (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9)
+  );
   const filtered = filter === 'all' ? all : all.filter((c: any) => c.status === filter);
 
   return (

@@ -24,7 +24,7 @@ function formatDuration(seconds: number): string {
 }
 
 export default function WebsitePage() {
-  const [mode, setMode] = useState<Mode>('week');
+  const [mode, setMode] = useState<Mode>('day');
 
   const { data, error, mutate } = useSWR(`/api/websites/stats?mode=${mode}`, fetcher);
   const { data: pagesData } = useSWR(`/api/websites/pages?mode=${mode}`, fetcher);

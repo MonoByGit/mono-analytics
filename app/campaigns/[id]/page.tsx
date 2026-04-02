@@ -16,7 +16,7 @@ const fetcher = (url: string) => fetch(url).then(r => r.json());
 type Mode = 'day' | 'week' | 'month';
 
 export default function CampaignDetailPage({ params }: { params: { id: string } }) {
-  const [mode, setMode] = useState<Mode>('week');
+  const [mode, setMode] = useState<Mode>('day');
   const { data, error, mutate } = useSWR(`/api/campaigns/${params.id}/detail?mode=${mode}`, fetcher);
 
   const campaign = data?.campaign;

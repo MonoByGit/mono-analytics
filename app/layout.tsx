@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <div className="flex min-h-screen">
           <SideNav />
-          <main className="flex-1 min-w-0 pb-20 md:pb-0">
+          <main className="flex-1 min-w-0 pb-20 md:pb-0" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
             {children}
           </main>
         </div>
