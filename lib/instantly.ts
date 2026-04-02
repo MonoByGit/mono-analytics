@@ -2,6 +2,16 @@ import { CampaignAnalytics, CampaignAnalyticsOverview, DailyAnalytics, Instantly
 
 const BASE_URL = 'https://api.instantly.ai/api/v2';
 
+const STATUS_MAP: Record<number, string> = {
+  1: 'active', 2: 'paused', 3: 'completed', 0: 'draft', 4: 'draft', 5: 'stopped',
+};
+
+function normalizeStatus(status: any): string {
+  if (typeof status === 'number') return STATUS_MAP[status] ?? 'unknown';
+  if (typeof status === 'string') return status.toLowerCase();
+  return 'unknown';
+}
+
 function getHeaders() {
   return {
     'Authorization': `Bearer ${process.env.INSTANTLY_API_KEY}`,
@@ -16,7 +26,8 @@ export async function getCampaigns(): Promise<InstantlyCampaign[]> {
   });
   if (!res.ok) throw new Error(`Instantly campaigns error: ${res.status}`);
   const data = await res.json();
-  return data.items ?? data ?? [];
+  const items: InstantlyCampaign[] = data.items ?? data ?? [];
+  return items.map(c => ({ ...c, status: normalizeStatus(c.status) as any }));
 }
 
 export async function getCampaignAnalytics(): Promise<CampaignAnalytics[]> {
